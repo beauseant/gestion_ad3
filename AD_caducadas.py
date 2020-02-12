@@ -59,8 +59,8 @@ if __name__ == "__main__":
 
 			
 			from_addr 		= cfg.get ('CORREO','from')
-			#to_addr_list 	=  [cfg.get ('CORREO','from')]
-			to_addr_list 	=  ['sblanco@tsc.uc3m.es']
+			to_addr_list 	=  [cfg.get ('CORREO','from')]
+			
 
 			errors = sm.sent (subject=subject, body=body, from_addr=from_addr, to_addr_list = to_addr_list,cc_addr_list=[])
 			
@@ -74,8 +74,8 @@ if __name__ == "__main__":
 
 			
 			for user in usersExpired:
-				#to_addr_list = [ user['sAMAccountName'] ]
-				to_addr_list 	=  ['sblanco@tsc.uc3m.es']
+				to_addr_list = [ user['sAMAccountName'] ]
+				
 
 				subject = ('Su cuenta ha caducado (%s)' % user['accountExpires'])
 
