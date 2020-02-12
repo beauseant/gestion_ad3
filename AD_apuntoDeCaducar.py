@@ -72,17 +72,17 @@ if __name__ == "__main__":
 
 			subject = ('Su cuenta caducará en %s días' % days)
 
-			errors = []
-
+			
 			
 			for user in usersExpired:
 				to_addr_list = [ user['sAMAccountName'] ]
 
 				body = cfg.get ('CORREO', 'texto').replace ('--login--', user['cn']).replace('--salto--','\n')
 
-				error = sm.sent (subject=subject, body=body, from_addr=from_addr, to_addr_list = to_addr_list,cc_addr_list=[])
-				errors.append(error)
-			
+				try:
+					sm.sent (subject=subject, body=body, from_addr=from_addr, to_addr_list = to_addr_list,cc_addr_list=[])
+				except:
+					print ('Error enviando mensaje a: %s' % (user['sAMAccountName'] ) )
+
 		except Exception as E:
 			print ('Error sending mail: %s' % E)
-			exit()
