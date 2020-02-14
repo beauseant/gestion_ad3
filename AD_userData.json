@@ -1,0 +1,13 @@
+{
+                     "objectClass": "User",
+                     "userAccountControl": ["66080"],
+                     "givenName": "Rodolfo",
+                     "sn": "Domínguez",
+                     "userPassword": "opC,.45",
+                     "description": "Rodolfo Domínguez",
+                     "displayName": "Rodolfo Domínguez",
+                     "mail": "rdominguez@tsc.uc3m.es",
+                     "userPrincipalName": "rdominguez",
+                     "sAMAccountName": "rdominguez",
+                     "accountExpires":"12/04/2024"
+}

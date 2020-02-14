@@ -77,6 +77,8 @@ if __name__ == "__main__":
 
 				body = cfg.get ('CORREO', 'texto').replace ('--login--', user['cn']).replace('--salto--','\n')
 
+				print ('enviando correo a:%s' % (user['sAMAccountName'] ))
+
 				try:
 					sm.sent (subject=subject, body=body, from_addr=from_addr, to_addr_list = to_addr_list,cc_addr_list=[])
 				except:
