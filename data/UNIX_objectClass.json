@@ -1,0 +1,16 @@
+[
+			"inetOrgPerson",
+			"posixAccount",
+			"Person",
+			"OrganizationalPerson",
+			"shadowAccount",
+			"mailrecipient",
+			"inetmailuser",
+			"inetlocalmailrecipient",
+			"inetUser",
+			"apple-user",
+			"userPresenceProfile",
+			"DTSCUser",
+			"krbPrincipalAux",
+			"krbTicketPolicyAux"
+		]

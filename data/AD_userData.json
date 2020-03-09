@@ -1,0 +1,13 @@
+{
+                     "objectClass": "User",
+                     "userAccountControl": ["66080"],
+                     "givenName": "Manuel",
+                     "sn": "Carrasco Yagüe",
+                     "userPassword": "me2H.u#F6",
+                     "description": "Manuel",
+                     "displayName": "Carrasco Yagüe",
+                     "mail": "mcarrasco@tsc.uc3m.es",
+                     "userPrincipalName": "mcarrasco",
+                     "sAMAccountName": "mcarrasco",
+                     "accountExpires":"25/5/2023"
+}

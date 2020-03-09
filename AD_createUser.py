@@ -30,17 +30,15 @@ if __name__ == "__main__":
 			servidor	= cfg.get ( 'AD','servidor')
 			domain		= cfg.get ( 'AD','domain')
 
+			with open(args.userData) as json_file:
+				attributes = json.load(json_file)
+
+
+			adConn 	= ad.gestionUsuariosAD ( nombre, domain, passwd, basedn, servidor )
+			adConn.createUser (attributes)
+
 		except Exception as E:
 			print (E)
 			exit ()
-
-		with open(args.userData) as json_file:
-			attributes = json.load(json_file)
-
-
-		adConn 	= ad.gestionUsuariosAD ( nombre, domain, passwd, basedn, servidor )
-
-		adConn.createUser (attributes)
-
 
 

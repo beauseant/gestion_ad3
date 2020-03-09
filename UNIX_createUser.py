@@ -13,6 +13,7 @@ if __name__ == "__main__":
 	parser	= argparse.ArgumentParser ( description='Gestion de un Active Directory desde python. Muestra informacion de usuario y pone caducidad a la cuenta' )
 
 	parser.add_argument('config'  , action = "store", metavar='config', type=str, help='fichero de configuracion')
+	parser.add_argument('obectClass'  , action = "store", metavar='config', type=str, help='fichero json con el objectClass')
 	parser.add_argument('userData'  , action = "store", metavar='config', type=str, help='fichero json con datos de usuario')
 
 
@@ -43,50 +44,34 @@ if __name__ == "__main__":
 
 		uidNUmber =  (unixConn.getLasId () +1)
 
-		objectClass = [
-			"inetOrgPerson",
-			"posixAccount",
-			"Person",
-			"OrganizationalPerson",
-			"shadowAccount",
-			"mailrecipient",
-			"inetmailuser",
-			"inetlocalmailrecipient",
-			"inetUser",
-			"apple-user",
-			"userPresenceProfile",
-			"DTSCUser",
-			"krbPrincipalAux",
-			"krbTicketPolicyAux"
-		]
 
-		#"ipUser",
-		attributes = {
-			"givenName": "Luis",
-			"sn": "Pérez",
-			"uid":"ramona",
-			"loginShell":"/bin/bash",
-			"employeetype":"otros",
-			"userPassword":"patata",
-			"mailQuota":10737418240,
-			"mailUserStatus":"Active",
-			"inetUserStatus":"Active"
-		}
+		try:
 
-		attributes['homeDirectory'] = ( '/export/usuarios01/%s' % attributes['uid'] )
-		attributes['cn']  = ('%s, %s' % (attributes['givenName'], attributes['sn']))
-		attributes['uidNumber'] = str(uidNUmber)
-		attributes['gidNumber'] = 100
-		attributes['mail'] = ('%s@tsc.uc3m.es' % attributes['uid'] )
-		attributes['apple-generateduid'] = str(uuid.uuid1()).upper()
+			with open(args.obectClass) as json_file:
+				objectClass = json.load(json_file)
 
 
-		userUid = ('uid=%s,%s' % (attributes['uid'], basedn))
+			with open(args.userData) as json_file:
+				attributes = json.load(json_file)
 
 
-		unixConn.createUser (userUid, objectClass, attributes)
+			attributes['homeDirectory'] = ( '/export/usuarios01/%s' % attributes['uid'] )
+			attributes['cn']  = ('%s %s' % (attributes['givenName'], attributes['sn']))
+			attributes['uidNumber'] = str(uidNUmber)
+			attributes['gidNumber'] = 100
+			attributes['mail'] = ('%s@tsc.uc3m.es' % attributes['uid'] )
+			attributes['apple-generateduid'] = str(uuid.uuid1()).upper()
+			attributes['krbPrincipalName'] = ('%s@TSC.UC3M.ES'% (attributes['uid']))
 
-		import ipdb ; ipdb.set_trace()
+			userUid = ('uid=%s,%s' % (attributes['uid'], basedn))
+
+
+			unixConn.createUser (userUid, objectClass, attributes)
+
+			print ('Usuario %s creado con el id %s' % ( attributes['uid'], uidNUmber ) )
+
+		except Exception as E:
+			print ('todo mal: %s' % E)
 
 		#adConn.createUser (attributes)
 

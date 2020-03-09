@@ -1,0 +1,12 @@
+{
+				"givenName": "Manuel",
+				"sn": "Carrasco Yagüe",
+				"uid":"mcarrasco",
+				"loginShell":"/bin/bash",
+				"employeetype":"otros",
+				"userPassword":"me2H.u#F6",
+				"mailQuota":10737418240,
+				"mailUserStatus":"Active",
+				"inetUserStatus":"Active",
+				"mailHost":"hermod.tsc.uc3m.es"
+			}

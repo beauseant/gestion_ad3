@@ -7,6 +7,10 @@ Created on Jan 13, 2012
 from ldap3 import Server, Connection, SIMPLE, SYNC, ALL, SASL, NTLM, ALL_ATTRIBUTES, SUBTREE
 import datetime
 import lib.filetimes as filetimes
+import hashlib
+import os
+import base64
+
 
 class gestionUsuariosUnix:
 
@@ -54,12 +58,38 @@ class gestionUsuariosUnix:
 		return max (list((filter(lambda x: (x>minimo and x<maximo), listIds))))
 
 
+
+	def makeSecret(self, password):
+
+		'''
+		import ipdb ; ipdb.set_trace()
+		salt = os.urandom(4)
+		h = hashlib.sha1(password.encode('utf-8'))
+		h.update(salt)
+		return "{SSHA}" + encode(h.digest() + salt).decode('utf-8')
+		'''
+		#return '{SSHA}%s' % bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt( 12 )).decode('utf-8')
+
+		
+		salt = os.urandom(4)
+		#h = hashlib.sha1(password)
+		hash=hashlib.sha1(password.encode('utf-8')+salt)
+		#h.update(salt)
+		#return "{SSHA}" + encode(h.digest() + salt).decode('utf-8')
+		enc_passwd1=base64.b64encode(hash.digest()+salt)
+		return ('{SSHA}%s' % enc_passwd1.decode('utf-8'))
+
 	def createUser (self, usuario, objectClass, attributes):
 		conn = self.__ldap_con
 		base = self.__basedn
 
-		import ipdb ; ipdb.set_trace()
+
+		attributes['userPassword'] = self.makeSecret (attributes['userPassword'])
 		conn.add (usuario, objectClass, attributes)		
+		#import ipdb ; ipdb.set_trace()
+		#conn.passwd_s("cn=Marice McCaugherty,ou=Product Testing,dc=example,dc=com", "ytrehguaCc", "secret")
+
+
 
 
 
@@ -154,14 +184,14 @@ class gestionUsuariosAD:
 		base = ('cn=%s,%s' % (attributes['displayName'], self.__basedn))
 
 
-		if 'accountExpires' in attributes:
-			attributes['accountExpires'] = filetimes.dt_to_filetime (datetime.datetime.strptime(attributes['accountExpires'], '%d/%m/%Y'))
-
 		try:
+			if 'accountExpires' in attributes:
+				attributes['accountExpires'] = filetimes.dt_to_filetime (datetime.datetime.strptime(attributes['accountExpires'], '%d/%m/%Y'))
+
 			self.__ldap_con.add (base, attributes=attributes)		
 
 		except Exception as E:
-			print (self.__ldap_con.result)
+			print ('Error %s, resultado consulta: %s', (E, self.__ldap_con.result))
 				
 
 		#si devuelve un error del tipo description': 'unwillingToPerform', 'dn': '', 'message': '0000001F: SvcErr: DSID-031A1254, problem 5003 (WILL_NOT_PERFORM),
@@ -170,4 +200,4 @@ class gestionUsuariosAD:
 		try:
 			self.__ldap_con.extend.microsoft.modify_password(base,attributes['userPassword'], controls=None)
 		except Exception as E:
-			print (self.__ldap_con.result)
+			print ('Error %s, resultado consulta: %s', (E, self.__ldap_con.result))
